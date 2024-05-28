@@ -16,13 +16,13 @@ export default class PetController {
 
     if (!Object.values(EnumEspecie).includes(especie)) {
       return res.status(400).json({ 
-        error: "Especie inválida" 
+        erros: "Especie inválida" 
       });
     }
 
     if (porte && !(porte in EnumPorte)) {
       return res.status(400).json({ 
-        error: "Porte inválido" 
+        erros: "Porte inválido" 
       });
     }
 
@@ -35,7 +35,7 @@ export default class PetController {
     );
 
     this.repository.criaPet(novoPet);
-    return res.status(200).json({ data: { id:novoPet.id, nome, especie, porte }});
+    return res.status(200).json({ dados: { id:novoPet.id, nome, especie, porte }});
   }
 
   async listaPets(
@@ -43,7 +43,7 @@ export default class PetController {
     res: Response<TipoResponseBodyPet>
   ) {
     const listaDePets = await this.repository.listaPet();
-    const data= listaDePets.map((pet) => {
+    const dados = listaDePets.map((pet) => {
       return {
         id: pet.id,
         nome: pet.nome,
@@ -51,7 +51,7 @@ export default class PetController {
         porte: pet.porte
       };
     });
-    return res.status(200).json({data});
+    return res.status(200).json({dados});
   }
 
   async atualizaPet(
@@ -66,7 +66,7 @@ export default class PetController {
     )
 
     if (!success) {
-      return res.status(404).json({ error: message });
+      return res.status(404).json({ erros: message });
     }
     return res.sendStatus(204);
   }
@@ -82,7 +82,7 @@ export default class PetController {
     )
 
     if (!success) {
-      return res.status(404).json({ error: message });
+      return res.status(404).json({ erros: message });
     }
     return res.sendStatus(204);
   }
@@ -96,7 +96,7 @@ export default class PetController {
       const adotanteId = Number(req.params.id_adotante);
   
       if (isNaN(petId) || isNaN(adotanteId)) {
-        return res.status(400).json({ error: 'ID do pet ou do adotante inválido.' });
+        return res.status(400).json({ erros: 'ID do pet ou do adotante inválido.' });
       }
 
       const result = await this.repository.adotaPet(petId, adotanteId);
@@ -104,11 +104,11 @@ export default class PetController {
       if (result.success) {
         return res.status(200).json({ message: 'Pet adotado com sucesso!' });
       } else {
-        return res.status(404).json({ error: result.message });
+        return res.status(404).json({ erros: result.message });
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Erro interno do servidor.' });
+      return res.status(500).json({ erros: 'Erro interno do servidor.' });
     }
   }
 

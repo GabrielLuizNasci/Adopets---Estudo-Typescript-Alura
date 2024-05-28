@@ -10,8 +10,10 @@ type TipoRequestParamsPet = {
 };
 
 type TipoResponseBodyPet = {
-    data?: Pick<PetEntity, "id" | "nome" | "especie" | "porte"> | Pick<PetEntity, "id" | "nome" | "especie" | "porte">[];
-    error?: unknown;
+    dados?: 
+    | Pick<PetEntity, "id" | "nome" | "especie" | "porte"> 
+    | Pick<PetEntity, "id" | "nome" | "especie" | "porte">[];
+    erros?: unknown;
     message?: string;
 };
 
