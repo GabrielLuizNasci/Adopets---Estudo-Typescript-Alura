@@ -36,8 +36,8 @@ export default class AdotanteController{
             nome: adotante.nome,
             celular: adotante.celular,
             endereco: adotante.endereco !== null? adotante.endereco : undefined,
-          }
-        })
+          };
+        });
         return res.status(200).json({ dados });
     }
 
