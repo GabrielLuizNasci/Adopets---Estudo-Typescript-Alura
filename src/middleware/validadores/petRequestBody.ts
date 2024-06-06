@@ -4,6 +4,7 @@ import {pt} from 'yup-locale-pt';
 import { TipoRequestBodyPet } from "../../tipos/tiposPet";
 import EnumEspecie from "../../enum/EnumEspecie";
 import EnumPorte from "../../enum/EnumPorte";
+import tratarErroValidacaoYup from "../../utils/trataValidacaoYup";
 
 yup.setLocale(pt);
 
@@ -17,22 +18,7 @@ yup.object({
 });
 
 const middlewareValidadorBodyPet = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        await esquemaBodyPet.validate(req.body, {
-          abortEarly: false,
-        });
-        return next();
-      } catch (error) {   
-        const yupErrors = error as yup.ValidationError;
-
-        const ValidationErrors: Record<string, string> = {};
-
-        yupErrors.inner.forEach((error) => {
-          if(!error.path) return;
-          ValidationErrors[error.path] = error.message;
-        })
-        return res.status(400).json({ error: ValidationErrors });
-      }
+    tratarErroValidacaoYup(esquemaBodyPet, req, res, next);
 }
 
 export {middlewareValidadorBodyPet};

@@ -11,7 +11,7 @@ export default class AdotanteEntity {
     @Column()
     nome: string;
 
-    @Column()
+    @Column({ unique: true})
     celular: string;
 
     @Column()

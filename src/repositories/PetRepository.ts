@@ -3,6 +3,7 @@ import PetEntity from "../entities/PetEntity";
 import InterfacePetRepository from "./interfaces/InterfacePetRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnumPorte from "../enum/EnumPorte";
+import { NaoEncontrado } from "../utils/manipulaErros";
 
 export default class PetRepository implements InterfacePetRepository{
     private petRepository: Repository<PetEntity>;
@@ -28,59 +29,37 @@ export default class PetRepository implements InterfacePetRepository{
     async atualizaPet(
         id: number, 
         newData: PetEntity
-    ): Promise<{ success: boolean; message?: string }> {
-        try {
-            const petParaAtuali = await this.petRepository.findOne({ where: { id } });
+    ){
+        const petParaAtuali = await this.petRepository.findOne({ where: { id } });
 
-            if(!petParaAtuali) {
-                return { 
-                    success: false, 
-                    message: "Pet não encontrado."
-                };
-            }
-
-            Object.assign(petParaAtuali, newData);
-
-            await this.petRepository.save(petParaAtuali);
-            return { success: true };
-        } catch (error) {
-            console.log(error);
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar atualizar o pet.",
-            };
+        if(!petParaAtuali) {
+            throw new NaoEncontrado("Pet não encontrado");
         }
+
+        Object.assign(petParaAtuali, newData);
+
+        await this.petRepository.save(petParaAtuali);
+        return { success: true };
     }
 
-    async deletaPet(id: number): Promise<{ success: boolean; message?: string }> {
-        try {
-            const petParaDeletar = await this.petRepository.findOne({ where: { id } });
+    async deletaPet(id: number) {
+        const petParaDeletar = await this.petRepository.findOne({ where: { id } });
 
-            if(!petParaDeletar) {
-                return { 
-                    success: false, 
-                    message: "Pet não encontrado."
-                };
-            }
+        if(!petParaDeletar) {
+            throw new NaoEncontrado("Pet não encontrado");
+        }
 
-            await this.petRepository.remove(petParaDeletar);
-            return { 
-                success: true,
-                message: "Pet deletado com sucesso",
-            };
-        } catch (error) {
-            console.log(error);
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar excluir o pet.",
-            };
-        } 
+        await this.petRepository.remove(petParaDeletar);
+        return { 
+            success: true,
+            message: "Pet deletado com sucesso",
+        };
     }
 
     async adotaPet(
         idPet: number,
         idAdotante: number 
-    ): Promise<{ success: boolean; message?: string }> {
+    ){
         const petId = Number(idPet);
         const adotanteId = Number(idAdotante);
 
@@ -94,19 +73,13 @@ export default class PetRepository implements InterfacePetRepository{
         const pet = await this.petRepository.findOne({where: {id: petId}});
 
         if(!pet){
-            return{
-                success: false, 
-                message: "Pet não encontrado."
-            };
+            throw new NaoEncontrado("Pet não encontrado");
         }
 
         const adotante= await this.adotanteRepository.findOne({where: { id: adotanteId }});
 
         if(!adotante){
-            return{
-                success: false, 
-                message: "Adotante não encontrado."
-            };
+            throw new NaoEncontrado("Adotante não encontrado");
         }
 
         pet.adotante = adotante;

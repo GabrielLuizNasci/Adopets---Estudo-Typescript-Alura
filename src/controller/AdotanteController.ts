@@ -8,6 +8,7 @@ import { TipoRequestBodyAdotante, TipoRequestParamsAdotante, TipoResponseBodyAdo
 
 export default class AdotanteController{
     constructor(private repository: AdotanteRepository) {}
+
     async criaAdotante(
         req: Request< {}, {}, TipoRequestBodyAdotante >,
         res: Response<TipoResponseBodyAdotante >
@@ -46,14 +47,8 @@ export default class AdotanteController{
       res: Response<TipoResponseBodyAdotante >) {
         const { id } = req.params;
     
-        const { success, message } = await this.repository.atualizaAdotante(
-          Number(id),
-          req.body as AdotanteEntity
-        )
+        await this.repository.atualizaAdotante(Number(id),req.body as AdotanteEntity);
     
-        if (!success) {
-          return res.status(404).json({ erros: message });
-        }
         return res.sendStatus(204);
       }
     
@@ -62,13 +57,8 @@ export default class AdotanteController{
         res: Response<TipoResponseBodyAdotante >) {
         const { id } = req.params;
     
-        const { success, message } = await this.repository.deletaAdotante(
-          Number(id)
-        )
-    
-        if (!success) {
-          return res.status(404).json({ erros: message });
-        }
+        await this.repository.deletaAdotante(Number(id));
+
         return res.sendStatus(204);
       }
 
@@ -77,14 +67,8 @@ export default class AdotanteController{
         res: Response<TipoResponseBodyAdotante >) {
         const { id } = req.params;
     
-        const { success, message } = await this.repository.atualizadaEnderAdotante(
-          Number(id),
-          req.body
-        );
+        await this.repository.atualizadaEnderAdotante(Number(id), req.body);
     
-        if (!success) {
-          return res.status(404).json({ erros: message });
-        }
         return res.sendStatus(204);
       }
 }

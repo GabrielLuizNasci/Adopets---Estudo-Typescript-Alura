@@ -47,15 +47,8 @@ export default class PetController {
     res: Response<TipoResponseBodyPet>
   ) {
     const { id } = req.params;
+    await this.repository.atualizaPet(Number(id), req.body as PetEntity);
 
-    const { success, message } = await this.repository.atualizaPet(
-      Number(id),
-      req.body as PetEntity
-    )
-
-    if (!success) {
-      return res.status(404).json({ erros: message });
-    }
     return res.sendStatus(204);
   }
 
@@ -65,13 +58,7 @@ export default class PetController {
   ) {
     const { id } = req.params;
 
-    const { success, message } = await this.repository.deletaPet(
-      Number(id)
-    )
-
-    if (!success) {
-      return res.status(404).json({ erros: message });
-    }
+    await this.repository.deletaPet(Number(id))
     return res.sendStatus(204);
   }
 
@@ -79,26 +66,13 @@ export default class PetController {
     req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>, 
     res: Response<TipoResponseBodyPet>
   ){
-    try {
-      const petId = Number(req.params.pet_id);
-      const adotanteId = Number(req.params.id_adotante);
+    const petId = Number(req.params.pet_id);
+    const adotanteId = Number(req.params.id_adotante);
   
-      if (isNaN(petId) || isNaN(adotanteId)) {
-        return res.status(400).json({ erros: 'ID do pet ou do adotante inválido.' });
-      }
-
-      const result = await this.repository.adotaPet(petId, adotanteId);
+    await this.repository.adotaPet(petId, adotanteId);
     
-      if (result.success) {
-        return res.status(200).json({ message: 'Pet adotado com sucesso!' });
-      } else {
-        return res.status(404).json({ erros: result.message });
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ erros: 'Erro interno do servidor.' });
-    }
-  }
+    return res.sendStatus(204);   
+}
 
   async buscaPorCampoGenerico(req: Request, res: Response){
     const {campo, valor} = req.query;
