@@ -4,12 +4,11 @@ import InterfaceAdotanteRepository from "./interfaces/InterfaceAdotanteRepositor
 import EnderecoEntity from "../entities/Endereco";
 import { NaoEncontrado, RequisicaoRuim } from "../utils/manipulaErros";
 
-
 export default class AdotanteRepository implements InterfaceAdotanteRepository{
     constructor(private repository: Repository<AdotanteEntity>){ }
 
     private async verificaCelularAdotante(celular: string){
-        return await this.repository.findOne({where: { celular }})
+        return await this.repository.findOne({where: { celular }});
     }
 
     async criaAdotante(adotante: AdotanteEntity): Promise<void> {
@@ -23,8 +22,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository{
         return await this.repository.find();
     }
 
-    async atualizaAdotante(id: number, newData: AdotanteEntity
-    ){
+    async atualizaAdotante(id: number, newData: AdotanteEntity){
         const adotanteParaAtuali = await this.repository.findOne({ where: { id } });
 
         if(!adotanteParaAtuali) {

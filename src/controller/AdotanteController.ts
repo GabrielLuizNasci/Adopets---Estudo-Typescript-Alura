@@ -39,7 +39,7 @@ export default class AdotanteController{
             endereco: adotante.endereco !== null? adotante.endereco : undefined,
           };
         });
-        return res.status(200).json({ dados });
+        return res.json({ dados });
     }
 
     async atualizaAdotante(

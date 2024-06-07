@@ -13,7 +13,7 @@ yup.object({
     /^(\(?[0-9]{2}\)?)? ?([0-9]{4,5})-?([0-9]{4})$/gm,
     "celular inválido."
   ),
-  senha: yup.string().defined().required().matches(
+  senha: yup.string().defined().required().min(6).matches(
     /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm,
     "senha muito fraca."
   ),
