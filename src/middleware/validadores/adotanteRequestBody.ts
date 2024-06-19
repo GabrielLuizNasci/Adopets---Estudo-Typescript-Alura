@@ -21,7 +21,7 @@ yup.object({
 });
 
 const middlewareValidadorBodyAdotante = async (req: Request, res: Response, next: NextFunction) => {
-    tratarErroValidacaoYup(esquemaBodyAdotante, req, res, next);
+  tratarErroValidacaoYup(esquemaBodyAdotante, req, res, next);
 }
 
 export {middlewareValidadorBodyAdotante};
