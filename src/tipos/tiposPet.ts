@@ -1,7 +1,7 @@
 import PetEntity from "../entities/PetEntity";
 
 
-type TipoRequestBodyPet = Omit<PetEntity, "id">;
+type TipoRequestBodyPet = Omit<PetEntity, "id" | "abrigo">;
 
 type TipoRequestParamsPet = { 
     id?: string,
