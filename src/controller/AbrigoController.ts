@@ -8,9 +8,9 @@ export default class AbrigoController{
     constructor(private repository: AbrigoRepository) {}
 
     async criaAbrigo(
-        req: Request< {}, {}, TipoRequestBodyAbrigo>,
+        req: Request< TipoRequestParamsAbrigo, {}, TipoRequestBodyAbrigo>,
         res: Response< TipoResponseBodyAbrigo >
-    ) {
+    ){
         const { nome, celular, email, senha, endereco } = <AbrigoEntity>req.body;
 
         const novoAbrigo = new AbrigoEntity(

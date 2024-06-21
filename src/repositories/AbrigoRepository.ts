@@ -8,7 +8,7 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository{
     constructor(private repository: Repository<AbrigoEntity>){ }
 
     private async verificaCelularAbrigo(celular: string){
-        return await this.repository.findOne({where: { celular }});
+        return !!(await this.repository.findOne({where: { celular } }));
     }
 
     async criaAbrigo(abrigo: AbrigoEntity): Promise<void>{
