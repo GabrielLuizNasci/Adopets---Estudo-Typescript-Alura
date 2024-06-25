@@ -10,7 +10,7 @@ export default class AdotanteController{
   constructor(private repository: AdotanteRepository) {}
 
   async criaAdotante(
-      req: Request< {}, {}, TipoRequestBodyAdotante >,
+      req: Request< TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante >,
       res: Response<TipoResponseBodyAdotante >
   ){
       const { nome, celular, senha, foto, endereco } = <AdotanteEntity>req.body;

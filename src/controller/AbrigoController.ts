@@ -3,6 +3,7 @@ import AbrigoRepository from "../repositories/AbrigoRepository";
 import { TipoRequestBodyAbrigo, TipoResponseBodyAbrigo, TipoRequestParamsAbrigo } from "../tipos/tiposAbrigo";
 import AbrigoEntity from "../entities/AbrigoEntity";
 import EnderecoEntity from "../entities/Endereco";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 export default class AbrigoController{
     constructor(private repository: AbrigoRepository) {}
@@ -11,7 +12,7 @@ export default class AbrigoController{
         req: Request< TipoRequestParamsAbrigo, {}, TipoRequestBodyAbrigo>,
         res: Response< TipoResponseBodyAbrigo >
     ){
-        const { nome, celular, email, senha, endereco } = <AbrigoEntity>req.body;
+        const { nome, celular, email, senha, endereco } = req.body;
 
         const novoAbrigo = new AbrigoEntity(
             nome, 
@@ -26,7 +27,7 @@ export default class AbrigoController{
     }
 
     async listaAbrigo(
-        req: Request< {}, {}, TipoRequestBodyAbrigo>,
+        req: Request< TipoRequestParamsAbrigo, {}, TipoRequestBodyAbrigo>,
         res: Response< TipoResponseBodyAbrigo >
     ){
         const listaDeAbrigos = await this.repository.listaAbrigo();
@@ -39,7 +40,7 @@ export default class AbrigoController{
                 endereco: abrigo.endereco !== null? abrigo.endereco : undefined,
             };
         });
-        return res.json({ dados });
+        return res.status(EnumHttpStatusCode.OK).json({ dados });
     }
 
     async atualizaAbrigo(
@@ -50,7 +51,7 @@ export default class AbrigoController{
     
         await this.repository.atualizaAbrigo(Number(id),req.body as AbrigoEntity);
     
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async deletaAbrigo(
@@ -61,7 +62,7 @@ export default class AbrigoController{
     
         await this.repository.deletaAbrigo(Number(id));
 
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async atualizadaEnderAbrigo(
@@ -72,6 +73,6 @@ export default class AbrigoController{
         
         await this.repository.atualizadaEnderAbrigo(Number(id), req.body);
         
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.OK);
     }
 }
