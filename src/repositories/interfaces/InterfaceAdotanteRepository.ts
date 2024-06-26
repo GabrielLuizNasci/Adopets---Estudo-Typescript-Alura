@@ -6,9 +6,9 @@ export default interface InterfaceAdotanteRepository {
 
     listaAdotante(): AdotanteEntity[] | Promise<AdotanteEntity[]>;
 
-    atualizaAdotante( id: number, adotante: AdotanteEntity): void;
+    atualizaAdotante( id: number, adotante: AdotanteEntity): void | Promise<{ success: boolean }>;
 
-    deletaAdotante(id: number): void;
+    deletaAdotante(id: number): void | Promise<{ success: boolean }>;
 
-    atualizadaEnderAdotante( idAdotante: number, endereco: EnderecoEntity): void;
+    atualizadaEnderAdotante( idAdotante: number, endereco: EnderecoEntity): void | Promise<{ success: boolean }>;
 }
