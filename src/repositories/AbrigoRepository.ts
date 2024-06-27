@@ -3,12 +3,13 @@ import InterfaceAbrigoRepository from "./interfaces/InterfaceAbrigoRepository";
 import AbrigoEntity from "../entities/AbrigoEntity";
 import EnderecoEntity from "../entities/Endereco";
 import { NaoEncontrado, RequisicaoRuim } from "../utils/manipulaErros";
+import { criaSenhaCriptografada } from "../utils/senhaCriptografada";
 
 export default class AbrigoRepository implements InterfaceAbrigoRepository{
     constructor(private repository: Repository<AbrigoEntity>){ }
 
     private async verificaCelularAbrigo(celular: string){
-        return !!(await this.repository.findOne({where: { celular } }));
+        return await this.repository.findOne({where: { celular } });
     }
 
     async criaAbrigo(abrigo: AbrigoEntity): Promise<void>{
@@ -22,20 +23,24 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository{
         return await this.repository.find();
     }
 
-    async atualizaAbrigo( id: number, newData: AbrigoEntity){
+    async atualizaAbrigo( id: number, newData: AbrigoEntity): Promise<{ success: boolean }>{
         const abrigoParaAtuali = await this.repository.findOne({ where: { id } });
 
-        if(!abrigoParaAtuali) {
+        if(!abrigoParaAtuali){
             throw new NaoEncontrado("Abrigo não encontrado.");
+        }
+
+        if (newData.senha){
+            newData.senha = await criaSenhaCriptografada(newData.senha);
         }
 
         Object.assign(abrigoParaAtuali, newData);
 
         await this.repository.save(abrigoParaAtuali);
-        return { success: true};
+        return { success: true };
     }
 
-    async deletaAbrigo(id: number){
+    async deletaAbrigo(id: number): Promise<{ success: boolean }>{
         const abrigoParaDeletar = await this.repository.findOne({ where: { id } });
 
         if(!abrigoParaDeletar) {
@@ -46,7 +51,7 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository{
         return { success: true };
     }
 
-    async atualizadaEnderAbrigo( idAbrigo: number, endereco: EnderecoEntity){
+    async atualizadaEnderAbrigo( idAbrigo: number, endereco: EnderecoEntity): Promise<{ success: boolean }>{
         const abrigo= await this.repository.findOne({where: {id:idAbrigo}});
 
         if(!abrigo){

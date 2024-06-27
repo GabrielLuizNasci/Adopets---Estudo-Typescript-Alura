@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import AdotanteRepository from "../repositories/AdotanteRepository";
 import EnderecoEntity from "../entities/Endereco";
-
 import { TipoRequestBodyAdotante, TipoRequestParamsAdotante, TipoResponseBodyAdotante } from "../tipos/tiposAdotante";
 import { NaoEncontrado } from "../utils/manipulaErros";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 
 export default class AdotanteController{
@@ -25,7 +25,7 @@ export default class AdotanteController{
     );
 
     await this.repository.criaAdotante(novoAdotante);
-    return res.status(201).json({ dados: {id: novoAdotante.id , nome, celular, endereco} });
+    return res.status(EnumHttpStatusCode.OK).json({ dados: {id: novoAdotante.id , nome, celular, endereco} });
   }
 
   async listaAdotante(
@@ -43,25 +43,18 @@ export default class AdotanteController{
       };
     });
 
-    return res.json({ dados });
+    return res.status(EnumHttpStatusCode.OK).json({ dados });
   }
 
   async atualizaAdotante(
     req: Request< TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante >,
     res: Response<TipoResponseBodyAdotante >
   ){
-    try {
-      const { id } = req.params;
-      await this.repository.atualizaAdotante(Number(id), req.body as AdotanteEntity);
-      return res.sendStatus(204);
-    } catch (error) {
-      if (error instanceof NaoEncontrado) {
-        return res.status(404).json({ error: error.message });
-      } else {
-        console.error('Erro ao atualizar adotante:', error); 
-        return res.status(500).json({ error: 'Erro interno no servidor.' }); 
-      }
-    }
+    const { id } = req.params;
+    
+    await this.repository.atualizaAdotante(Number(id), req.body as AdotanteEntity);
+
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
     
   async deletaAdotante(
@@ -72,7 +65,7 @@ export default class AdotanteController{
     
     await this.repository.deletaAdotante(Number(id));
 
-    return res.sendStatus(204);
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
 
   async atualizadaEnderAdotante(
@@ -83,6 +76,6 @@ export default class AdotanteController{
     
     await this.repository.atualizadaEnderAdotante(Number(id), req.body);
     
-    return res.sendStatus(204);
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
 }

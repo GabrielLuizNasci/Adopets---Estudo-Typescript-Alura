@@ -49,6 +49,6 @@ export default class AbrigoEntity{
     @BeforeInsert()
     @BeforeUpdate()
     private async criptografaSenha(senha: string) {
-        this.senha = criaSenhaCriptografada(this.senha);
+        this.senha =  await criaSenhaCriptografada(this.senha);
     }
 }

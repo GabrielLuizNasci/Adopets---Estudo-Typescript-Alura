@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as yup from "yup";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 const tratarErroValidacaoYup =(
     esquema: yup.Schema<unknown>,
@@ -18,7 +19,8 @@ const tratarErroValidacaoYup =(
                 errosDeValidacao[erro.path] = erro.message;
             }
         });
+        return res.status(EnumHttpStatusCode.BAD_REQUEST).json({ erros: errosDeValidacao });
     }
-}
+};
 
 export default tratarErroValidacaoYup;

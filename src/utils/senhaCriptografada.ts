@@ -1,9 +1,9 @@
-import crypto from "crypto";
+import bcrypt from "bcrypt";
 
-export const criaSenhaCriptografada = (senha: string) => {
-    const salt = crypto.randomBytes(16).toString("hex");
-    const hash = crypto.createHmac("sha256", salt);
+export const criaSenhaCriptografada = async (senha: string) => {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(senha, salt);
 
-    hash.update(senha);
-    return hash.digest("hex");
+    return `${salt}:${hash}`;
 };

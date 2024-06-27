@@ -9,4 +9,5 @@ export const verificaIdMiddleware = (req: Request, res: Response, next: NextFunc
             throw new RequisicaoRuim(`O parametro ${param} deve ser um número inteiro.`);
         }
     }
+    next();
 }

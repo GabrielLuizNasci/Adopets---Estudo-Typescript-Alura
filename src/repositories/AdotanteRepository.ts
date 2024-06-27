@@ -3,6 +3,7 @@ import AdotanteEntity from "../entities/AdotanteEntity";
 import InterfaceAdotanteRepository from "./interfaces/InterfaceAdotanteRepository";
 import EnderecoEntity from "../entities/Endereco";
 import { NaoEncontrado, RequisicaoRuim } from "../utils/manipulaErros";
+import { criaSenhaCriptografada } from "../utils/senhaCriptografada";
 
 export default class AdotanteRepository implements InterfaceAdotanteRepository{
     constructor(private repository: Repository<AdotanteEntity>){ }
@@ -29,10 +30,14 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository{
             throw new NaoEncontrado("Adotante não encontrado.");
         }
 
+        if (newData.senha){
+            newData.senha = await criaSenhaCriptografada(newData.senha);
+        }
+
         Object.assign(adotanteParaAtuali, newData);
 
         await this.repository.save(adotanteParaAtuali);
-        return { success: true};
+        return { success: true };
     }
 
     async deletaAdotante(id: number): Promise<{ success: boolean }>{

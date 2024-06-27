@@ -23,7 +23,7 @@ export default class AbrigoController{
         );
 
         await this.repository.criaAbrigo(novoAbrigo);
-        return res.status(201).json({ dados: {id: novoAbrigo.id , nome, celular, email, endereco} });
+        return res.status(EnumHttpStatusCode.OK).json({ dados: {id: novoAbrigo.id , nome, celular, email, endereco} });
     }
 
     async listaAbrigo(
@@ -73,6 +73,6 @@ export default class AbrigoController{
         
         await this.repository.atualizadaEnderAbrigo(Number(id), req.body);
         
-        return res.sendStatus(EnumHttpStatusCode.OK);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 }
